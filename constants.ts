@@ -1,4 +1,24 @@
-import { PricingTier, FaqItem, ShowcaseItem, ProcessStep } from './types';
+import { FaqItem, ShowcaseItem, ProcessStep, PricingTier } from './types';
+
+export const CONTACT_EMAIL = "SynapseCreativeIA@gmail.com";
+
+export const PRICING_TIERS: PricingTier[] = [
+  {
+    name: "Pack Inicial",
+    price: "$49",
+    description: "5 imágenes generadas por IA. Ideal para probar el servicio."
+  },
+  {
+    name: "Pack Crecimiento",
+    price: "$129",
+    description: "15 imágenes. Variedad de fondos y estilos. Entrega prioritaria."
+  },
+  {
+    name: "Pack Escala",
+    price: "$299",
+    description: "50 imágenes. Modelos virtuales personalizados. Soporte dedicado."
+  }
+];
 
 export const HERO_COPY = {
   h1: "Visuales de Gran Marca. Presupuesto de Pequeño Negocio.",
@@ -70,47 +90,6 @@ export const PROCESS_STEPS: ProcessStep[] = [
     title: "Entrega y Impacto",
     description: "Recibe imágenes de alta resolución listas para tu web, Instagram y campañas de Ads en 48 horas.",
     iconName: "Download"
-  }
-];
-
-export const PRICING_TIERS: PricingTier[] = [
-  {
-    name: "Starter",
-    price: "299€",
-    description: "Perfecto para validar nuevos productos en redes sociales.",
-    features: [
-      "5 Imágenes Generadas por IA",
-      "1 Modelo Virtual",
-      "2 Entornos a elegir",
-      "Entrega en 72 horas",
-      "Uso comercial web/social"
-    ]
-  },
-  {
-    name: "Growth",
-    price: "599€",
-    description: "El favorito para marcas que escalan sus campañas.",
-    features: [
-      "15 Imágenes Generadas por IA",
-      "Modelos diversos inclusivos",
-      "Entornos ilimitados",
-      "Entrega en 48 horas",
-      "Retoque manual avanzado",
-      "Uso comercial completo"
-    ],
-    recommended: true
-  },
-  {
-    name: "Agency",
-    price: "Consultar",
-    description: "Volumen alto para catálogos completos o agencias.",
-    features: [
-      "50+ Imágenes mensuales",
-      "Entrenamiento de IA a medida (Tu estilo)",
-      "Director de Arte dedicado",
-      "Entrega prioritaria 24h",
-      "Soporte API disponible"
-    ]
   }
 ];
 

@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check, X as XIcon, Camera, Upload, Wand2, Download, Instagram, Mail, Globe } from 'lucide-react';
-import Navbar from './components/Navbar';
-import ChatWidget from './components/ChatWidget';
-import { HERO_COPY, COMPARISON_COPY, SHOWCASE_ITEMS, PROCESS_STEPS, PRICING_TIERS, FAQ_ITEMS } from './constants';
-
-// --- Sub-components defined here for simplicity of the single-file requirement structure where possible, 
-// though Navbar and ChatWidget are complex enough to be separate. 
+import { ArrowRight, Check, X as XIcon, Upload, Wand2, Download, Mail, Send, ChevronDown } from 'lucide-react';
+import Navbar, { SynapsesLogo } from './components/Navbar';
+import { HERO_COPY, COMPARISON_COPY, SHOWCASE_ITEMS, PROCESS_STEPS, FAQ_ITEMS, CONTACT_EMAIL } from './constants';
 
 const Hero = () => (
-  <header className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+  <header id="inicio" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
     <div className="absolute inset-0 z-0">
        {/* Abstract Background */}
        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-50 to-transparent opacity-60"></div>
@@ -28,12 +24,20 @@ const Hero = () => (
       <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600 mb-10 leading-relaxed">
         {HERO_COPY.h2}
       </p>
-      <div className="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#contacto" className="px-8 py-4 rounded-full bg-gray-900 text-white font-bold text-lg hover:bg-gray-800 transition-all hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
-          {HERO_COPY.cta} <ArrowRight size={20} />
-        </a>
-        <a href="#galeria" className="px-8 py-4 rounded-full bg-white text-gray-700 border border-gray-200 font-semibold text-lg hover:bg-gray-50 transition-all flex items-center justify-center">
-          Ver Ejemplos
+      
+      {/* Scroll Indicator (Replaces Buttons) */}
+      <div className="flex flex-col items-center justify-center gap-3 mt-8">
+        <span className="text-sm font-medium text-gray-400 tracking-widest uppercase animate-pulse">Descubre más</span>
+        <a 
+          href="#comparacion" 
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('comparacion')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="p-4 bg-white rounded-full shadow-lg border border-indigo-50 text-indigo-600 hover:text-indigo-800 hover:shadow-xl transition-all animate-bounce"
+          aria-label="Scroll down"
+        >
+          <ChevronDown size={24} />
         </a>
       </div>
       
@@ -56,7 +60,7 @@ const Hero = () => (
 );
 
 const Comparison = () => (
-  <section className="py-20 bg-gray-50">
+  <section id="comparacion" className="py-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
         <h2 className="text-3xl font-bold text-gray-900">{COMPARISON_COPY.title}</h2>
@@ -175,57 +179,103 @@ const Process = () => (
   </section>
 );
 
-const Pricing = () => (
-  <section id="precios" className="py-24 bg-gray-50">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold text-gray-900">Planes Simples</h2>
-        <p className="text-gray-600 mt-4">Escala tus visuales a medida que escala tu marca.</p>
-      </div>
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {PRICING_TIERS.map((tier, idx) => (
-          <div key={idx} className={`relative bg-white rounded-2xl p-8 border ${tier.recommended ? 'border-indigo-500 shadow-2xl scale-105 z-10' : 'border-gray-200 shadow-sm'} flex flex-col`}>
-            {tier.recommended && (
-              <span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                Más Popular
-              </span>
-            )}
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
-            <div className="mb-4">
-              <span className="text-4xl font-bold text-gray-900">{tier.price}</span>
-              {tier.price !== 'Consultar' && <span className="text-gray-500">/mes</span>}
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = `Consulta web de ${formData.name}`;
+    const body = `Nombre: ${formData.name}\nEmail: ${formData.email}\n\nMensaje:\n${formData.message}`;
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  return (
+    <section id="contacto" className="py-24 bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
+          <div className="bg-indigo-600 p-12 md:w-2/5 text-white flex flex-col justify-between">
+            <div>
+              <h3 className="text-3xl font-bold mb-6">Contactar</h3>
+              <p className="text-indigo-100 mb-8 leading-relaxed">
+                ¿Listo para transformar la imagen de tu marca? Cuéntanos sobre tu proyecto y te responderemos en menos de 24 horas.
+              </p>
             </div>
-            <p className="text-gray-500 text-sm mb-8">{tier.description}</p>
-            
-            <ul className="space-y-4 mb-8 flex-1">
-              {tier.features.map((feature, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <Check size={16} className="text-teal-500 mt-1 flex-shrink-0" />
-                  <span className="text-gray-700 text-sm">{feature}</span>
-                </li>
-              ))}
-            </ul>
-            
-            <button className={`w-full py-3 rounded-xl font-bold transition-all ${
-              tier.recommended 
-                ? 'bg-gradient-to-r from-indigo-600 to-teal-500 text-white hover:shadow-lg hover:opacity-90' 
-                : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-            }`}>
-              Elegir {tier.name}
-            </button>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-indigo-100">
+                <Mail size={20} />
+                <span className="text-sm font-medium">{CONTACT_EMAIL}</span>
+              </div>
+            </div>
           </div>
-        ))}
+          
+          <div className="p-12 md:w-3/5">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white"
+                  placeholder="Tu nombre"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white"
+                  placeholder="tu@email.com"
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Cuéntanos tu idea</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white resize-none"
+                  placeholder="Necesito fotos para mi nueva colección de..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-all flex items-center justify-center gap-2 hover:shadow-lg transform hover:-translate-y-0.5"
+              >
+                Enviar Solicitud <Send size={18} />
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-white">
+    <section id="faq" className="py-24 bg-white">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Preguntas Frecuentes</h2>
         <div className="space-y-4">
@@ -245,7 +295,7 @@ const FAQ = () => {
                   openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="p-6 pt-0 text-gray-600 bg-gray-50 border-t border-gray-100">
+                <div className="px-6 pb-6 text-gray-600 bg-white leading-relaxed">
                   {item.answer}
                 </div>
               </div>
@@ -258,48 +308,23 @@ const FAQ = () => {
 };
 
 const Footer = () => (
-  <footer id="contacto" className="bg-gray-900 text-white pt-20 pb-10">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid md:grid-cols-4 gap-12 mb-16">
-        <div className="col-span-1 md:col-span-2">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-gray-900">
-               <Camera size={20} />
-            </div>
-            <span className="font-bold text-2xl tracking-tight">Synapses</span>
-          </div>
-          <p className="text-gray-400 max-w-sm mb-8">
-            Revolucionando la fotografía de producto para marcas modernas. 
-            Sin logística, sin esperas, solo resultados visuales de alto impacto.
-          </p>
-          <div className="flex gap-4">
-            <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-indigo-600 transition-colors"><Instagram size={20} /></a>
-            <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-indigo-600 transition-colors"><Mail size={20} /></a>
-            <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-indigo-600 transition-colors"><Globe size={20} /></a>
-          </div>
+  <footer className="bg-gray-900 text-white pt-20 pb-10 border-t border-gray-800">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+      <div className="flex items-center gap-2 mb-6">
+        <div className="w-10 h-10 flex items-center justify-center text-white bg-gray-800 rounded-lg">
+           <SynapsesLogo className="w-8 h-8" />
         </div>
-        
-        <div>
-          <h4 className="font-bold text-lg mb-6 text-indigo-400">Servicio</h4>
-          <ul className="space-y-4 text-gray-400">
-            <li><a href="#" className="hover:text-white transition-colors">Generación de Imagen</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Modelos Virtuales</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Retoque AI</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Precios</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-bold text-lg mb-6 text-indigo-400">Legal</h4>
-          <ul className="space-y-4 text-gray-400">
-            <li><a href="#" className="hover:text-white transition-colors">Términos de Servicio</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Política de Privacidad</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Licencias Comerciales</a></li>
-          </ul>
-        </div>
+        <span className="font-bold text-3xl tracking-tight">Synapses</span>
+      </div>
+      <p className="text-gray-400 max-w-md mb-8">
+        Revolucionando la fotografía de producto para marcas modernas. 
+        Sin logística, sin esperas, solo resultados visuales de alto impacto.
+      </p>
+      <div className="flex gap-6 mb-12">
+        <a href={`mailto:${CONTACT_EMAIL}`} className="p-3 bg-gray-800 rounded-full hover:bg-indigo-600 transition-colors" aria-label="Email"><Mail size={24} /></a>
       </div>
       
-      <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+      <div className="w-full border-t border-gray-800 pt-8 text-gray-500 text-sm">
         <p>&copy; {new Date().getFullYear()} Synapses Creative. Todos los derechos reservados.</p>
       </div>
     </div>
@@ -326,11 +351,10 @@ function App() {
              </div>
            </div>
         </div>
-        <Pricing />
+        <Contact />
         <FAQ />
       </main>
       <Footer />
-      <ChatWidget />
     </div>
   );
 }

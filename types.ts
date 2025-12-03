@@ -1,11 +1,3 @@
-export interface PricingTier {
-  name: string;
-  price: string;
-  description: string;
-  features: string[];
-  recommended?: boolean;
-}
-
 export interface FaqItem {
   question: string;
   answer: string;
@@ -29,5 +21,10 @@ export interface ProcessStep {
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
-  isError?: boolean;
+}
+
+export interface PricingTier {
+  name: string;
+  price: string;
+  description: string;
 }
